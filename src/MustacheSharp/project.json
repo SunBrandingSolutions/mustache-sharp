@@ -1,0 +1,23 @@
+﻿{
+  "title": "mustache-sharp-core",
+  "description": "A extension of the mustache text template engine for .NET.",
+  "version": "1.0.0-*",
+
+  "buildOptions": {
+    "embed": {
+      "include": [ "Properties/Resources.resx" ]
+    }
+  },
+
+  "dependencies": {
+    "NETStandard.Library": "1.6.0",
+    "System.Data.Common": "4.1.0",
+    "System.Reflection.TypeExtensions": "4.1.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

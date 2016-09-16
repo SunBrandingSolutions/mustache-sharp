@@ -69,6 +69,7 @@ namespace Mustache
             {
                 return false;
             }
+
             IEnumerable enumerable = condition as IEnumerable;
             if (enumerable != null)
             {

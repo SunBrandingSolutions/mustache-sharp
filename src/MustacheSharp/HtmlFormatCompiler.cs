@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security;
 
 namespace Mustache
 {
@@ -61,7 +60,9 @@ namespace Mustache
                 // Do not escape text within triple curly braces
                 return;
             }
-            e.Substitute = SecurityElement.Escape(e.Substitute);
+
+            // commenting this out until I can figure out what it does
+            ////e.Substitute = SecurityElement.Escape(e.Substitute);
         }
     }
 }
