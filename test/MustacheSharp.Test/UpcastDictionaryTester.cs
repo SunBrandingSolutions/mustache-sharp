@@ -86,8 +86,8 @@ namespace Mustache.Test
         {
             var source = new Dictionary<string, string>() { { "Name", "Bob" }, { "Age", "100" } };
             IDictionary<string, object> result = UpcastDictionary.Create(source);
-            ICollection sourceKeys = source.Keys;
-            ICollection wrappedKeys = result.Keys.ToArray();
+            ICollection<string> sourceKeys = source.Keys.ToArray();
+            ICollection<string> wrappedKeys = result.Keys.ToArray();
             Assert.Equal(sourceKeys, wrappedKeys);
         }
 
@@ -119,9 +119,14 @@ namespace Mustache.Test
         {
             var source = new Dictionary<string, int>() { { "Age", 100 }, { "Weight", 500 } };
             IDictionary<string, object> result = UpcastDictionary.Create(source);
-            ICollection sourceValues = source.Values;
-            ICollection wrappedValues = result.Values.ToArray();
-            Assert.Equal(sourceValues, wrappedValues);
+
+            foreach (var key in source.Keys)
+            {
+                var value = source[key];
+                var wrappedValue = result[key];
+
+                Assert.Equal(value, wrappedValue);
+            }
         }
 
         [Fact]

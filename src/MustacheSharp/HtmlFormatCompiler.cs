@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Encodings.Web;
 
 namespace Mustache
 {
@@ -60,9 +61,8 @@ namespace Mustache
                 // Do not escape text within triple curly braces
                 return;
             }
-
-            // commenting this out until I can figure out what it does
-            ////e.Substitute = SecurityElement.Escape(e.Substitute);
+            
+            e.Substitute = HtmlEncoder.Default.Encode(e.Substitute);
         }
     }
 }

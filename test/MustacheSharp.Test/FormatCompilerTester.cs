@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Xunit;
 
 namespace Mustache.Test
@@ -1351,6 +1353,7 @@ Item Number: foo<br />
         [Fact]
         public void TestCompile_MultipleTags()
         {
+            var cultureUS = new CultureInfo("en-US");
             FormatCompiler compiler = new FormatCompiler();
             const string format = @"Hello {{Customer.FirstName}}:
 {{#newline}}
@@ -1368,7 +1371,7 @@ Your order total was: {{Total:C}}
 {{/if}}
 {{/with}}";
             Generator generator = compiler.Compile(format);
-            string result = generator.Render(new
+            string result = generator.Render(cultureUS, new
             {
                 Customer = new { FirstName = "Bob" },
                 Order = new

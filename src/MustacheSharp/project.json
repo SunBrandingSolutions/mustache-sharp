@@ -1,6 +1,15 @@
 ﻿{
   "title": "mustache-sharp-core",
   "description": "A extension of the mustache text template engine for .NET.",
+  "packOptions": {
+    "projectUrl": "https://github.com/SunBrandingSolutions/mustache-sharp",
+    "licenseUrl": "https://github.com/SunBrandingSolutions/mustache-sharp/UNLICENSE.txt",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/SunBrandingSolutions/mustache-sharp"
+    },
+    "tags": [ "mustache", "templating" ]
+  },
   "version": "1.0.0-*",
 
   "buildOptions": {
@@ -12,7 +21,8 @@
   "dependencies": {
     "NETStandard.Library": "1.6.0",
     "System.Data.Common": "4.1.0",
-    "System.Reflection.TypeExtensions": "4.1.0"
+    "System.Reflection.TypeExtensions": "4.1.0",
+    "System.Text.Encodings.Web": "4.0.0"
   },
 
   "frameworks": {
