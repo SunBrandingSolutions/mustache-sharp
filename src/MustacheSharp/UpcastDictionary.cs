@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Mustache
 {
-    internal static class UpcastDictionary
+    public static class UpcastDictionary
     {
         public static IDictionary<string, object> Create(object source)
         {
@@ -95,7 +95,7 @@ namespace Mustache
         }
     }
 
-    internal class UpcastDictionary<TValue> : IDictionary<string, object>
+    public class UpcastDictionary<TValue> : IDictionary<string, object>
     {
         private readonly IDictionary<string, TValue> dictionary;
 

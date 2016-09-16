@@ -1,11 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Xunit;
 
 namespace Mustache.Test
 {
-    [TestClass]
     public class HtmlFormatCompilerTester
     {
-        [TestMethod]
+        [Fact]
         public void ShouldEscapeValueContainingHTMLCharacters()
         {
             HtmlFormatCompiler compiler = new HtmlFormatCompiler();
@@ -14,10 +13,10 @@ namespace Mustache.Test
             {
                 Name = "John \"The Man\" Standford"
             });
-            Assert.AreEqual("<html><body>Hello, John &quot;The Man&quot; Standford!!!</body></html>", html);
+            Assert.Equal("<html><body>Hello, John &quot;The Man&quot; Standford!!!</body></html>", html);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldIgnoreHTMLCharactersInsideTripleCurlyBraces()
         {
             HtmlFormatCompiler compiler = new HtmlFormatCompiler();
@@ -26,7 +25,7 @@ namespace Mustache.Test
             {
                 Name = "John \"The Man\" Standford"
             });
-            Assert.AreEqual("<html><body>Hello, John \"The Man\" Standford!!!</body></html>", html);
+            Assert.Equal("<html><body>Hello, John \"The Man\" Standford!!!</body></html>", html);
         }
     }
 }
