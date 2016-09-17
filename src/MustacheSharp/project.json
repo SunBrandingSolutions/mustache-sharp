@@ -4,13 +4,15 @@
   "packOptions": {
     "projectUrl": "https://github.com/SunBrandingSolutions/mustache-sharp",
     "licenseUrl": "https://github.com/SunBrandingSolutions/mustache-sharp/UNLICENSE.txt",
+    "owners": [ "Sun Branding Solutions" ],
+    "summary": "An implementation of Mustache in .NET Core.",
     "repository": {
       "type": "git",
       "url": "https://github.com/SunBrandingSolutions/mustache-sharp"
     },
-    "tags": [ "mustache", "templating" ]
+    "tags": [ "mustache", "handlebars.js", "text", "generation", "building", "template" ]
   },
-  "version": "1.0.0-*",
+  "version": "0.0.1-*",
 
   "buildOptions": {
     "embed": {
