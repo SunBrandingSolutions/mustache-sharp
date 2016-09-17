@@ -18,8 +18,9 @@
     "embed": {
       "include": [ "Properties/Resources.resx" ]
     },
-    "xmlDoc": true,
-    "nowarn": [ "1591" ]
+    "nowarn": [ "1591" ],
+    "warningsAsErrors": true,
+    "xmlDoc": true
   },
 
   "frameworks": {

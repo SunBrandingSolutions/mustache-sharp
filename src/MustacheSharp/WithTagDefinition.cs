@@ -52,6 +52,7 @@ namespace Mustache
         /// <param name="writer">The text writer passed</param>
         /// <param name="keyScope">The current key scope.</param>
         /// <param name="arguments">The arguments passed to the tag.</param>
+        /// <param name="contextScope">The context scope.</param>
         /// <returns>The scope to use when building the inner text of the tag.</returns>
         public override IEnumerable<NestedContext> GetChildContext(
             TextWriter writer, 

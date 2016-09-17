@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mustache
+﻿namespace Mustache
 {
     /// <summary>
     /// Represents a context within a template.
@@ -11,7 +9,7 @@ namespace Mustache
         /// Initializes a new instance of a Context.
         /// </summary>
         /// <param name="tagName">The name of the tag that created the context.</param>
-        /// <param name="argument">The argument used to create the context.</param>
+        /// <param name="parameters">The context parameters.</param>
         internal Context(string tagName, ContextParameter[] parameters)
         {
             TagName = tagName;

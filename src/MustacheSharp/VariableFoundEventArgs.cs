@@ -10,7 +10,7 @@ namespace Mustache
         /// <summary>
         /// Initializes a new instance of a VariableFoundEventArgs.
         /// </summary>
-        /// <param name="key">The key that was found.</param>
+        /// <param name="name">The key that was found.</param>
         /// <param name="alignment">The alignment that will be applied to the substitute value.</param>
         /// <param name="formatting">The formatting that will be applied to the substitute value.</param>
         /// <param name="isExtension">Specifies whether the variable was found within triple curly braces.</param>

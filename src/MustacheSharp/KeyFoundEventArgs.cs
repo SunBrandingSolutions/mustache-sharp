@@ -11,6 +11,7 @@ namespace Mustache
         /// Initializes a new instance of a KeyFoundEventArgs.
         /// </summary>
         /// <param name="key">The fully-qualified key.</param>
+        /// <param name="value">The object to use as the substitute.</param>
         /// <param name="isExtension">Specifies whether the key was found within triple curly braces.</param>
         internal KeyFoundEventArgs(string key, object value, bool isExtension)
         {

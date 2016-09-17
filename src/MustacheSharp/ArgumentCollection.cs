@@ -23,7 +23,7 @@ namespace Mustache
         /// Associates the given parameter to the key placeholder.
         /// </summary>
         /// <param name="parameter">The parameter to associate the key with.</param>
-        /// <param name="key">The argument.</param>
+        /// <param name="argument">The argument.</param>
         /// <remarks>If the key is null, the default value of the parameter will be used.</remarks>
         public void AddArgument(TagParameter parameter, IArgument argument)
         {
@@ -33,7 +33,7 @@ namespace Mustache
         /// <summary>
         /// Gets the key that will be used to find the substitute value.
         /// </summary>
-        /// <param name="parameterName">The name of the parameter.</param>
+        /// <param name="parameter">The name of the parameter.</param>
         public string GetKey(TagParameter parameter)
         {
             IArgument argument;
