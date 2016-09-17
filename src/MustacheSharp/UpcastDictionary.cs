@@ -47,7 +47,7 @@ namespace Mustache
                     }
                 }
 
-                foreach (Type interfaceType in typeInfo.GetInterfaces())
+                foreach (Type interfaceType in typeInfo.GenericTypeArguments)
                 {
                     if (!visited.Contains(interfaceType))
                     {
@@ -74,7 +74,7 @@ namespace Mustache
             {
                 return null;
             }
-            Type[] argumentTypes = typeInfo.GetGenericArguments();
+            Type[] argumentTypes = typeInfo.GenericTypeArguments;
             if (argumentTypes.Length != 2)
             {
                 return null;
