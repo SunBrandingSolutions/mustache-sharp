@@ -1,5 +1,9 @@
 ﻿using System;
+#if NETSTANDARD1_3
 using System.Text.Encodings.Web;
+#else
+using System.Security;
+#endif
 
 namespace Mustache
 {
@@ -61,8 +65,12 @@ namespace Mustache
                 // Do not escape text within triple curly braces
                 return;
             }
-            
+
+#if NETSTANDARD1_3
             e.Substitute = HtmlEncoder.Default.Encode(e.Substitute);
+#else
+            e.Substitute = SecurityElement.Escape(e.Substitute);
+#endif
         }
     }
 }

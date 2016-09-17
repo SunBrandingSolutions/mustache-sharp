@@ -12,24 +12,26 @@
     },
     "tags": [ "mustache", "handlebars.js", "text", "generation", "building", "template" ]
   },
-  "version": "0.0.1-*",
+  "version": "1.0.0-*",
 
   "buildOptions": {
     "embed": {
       "include": [ "Properties/Resources.resx" ]
-    }
-  },
-
-  "dependencies": {
-    "NETStandard.Library": "1.6.0",
-    "System.Data.Common": "4.1.0",
-    "System.Reflection.TypeExtensions": "4.1.0",
-    "System.Text.Encodings.Web": "4.0.0"
+    },
+    "xmlDoc": true,
+    "nowarn": [ "1591" ]
   },
 
   "frameworks": {
     "netstandard1.3": {
-      "imports": "dnxcore50"
-    }
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "System.Data.Common": "4.1.0",
+        "System.Reflection.TypeExtensions": "4.1.0",
+        "System.Text.Encodings.Web": "4.0.0"
+      }
+    },
+    "net452": { }
   }
 }
