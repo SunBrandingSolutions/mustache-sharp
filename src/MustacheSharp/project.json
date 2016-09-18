@@ -1,9 +1,10 @@
 ﻿{
-  "title": "mustache-sharp-core",
+  "title": "Mustache Sharp Core",
   "description": "A extension of the mustache text template engine for .NET.",
+  "authors": ["truncon", "kwilliamssbs"],
   "packOptions": {
     "projectUrl": "https://github.com/SunBrandingSolutions/mustache-sharp",
-    "licenseUrl": "https://github.com/SunBrandingSolutions/mustache-sharp/UNLICENSE.txt",
+    "licenseUrl": "https://raw.githubusercontent.com/SunBrandingSolutions/mustache-sharp/master/UNLICENSE.txt",
     "owners": [ "Sun Branding Solutions" ],
     "summary": "An implementation of Mustache in .NET Core.",
     "repository": {
