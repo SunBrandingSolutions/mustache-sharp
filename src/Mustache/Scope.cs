@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using MustacheSharp.Properties;
+using Mustache.Properties;
 
 namespace Mustache
 {

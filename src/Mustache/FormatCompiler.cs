@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using MustacheSharp.Properties;
+using Mustache.Properties;
 
 namespace Mustache
 {

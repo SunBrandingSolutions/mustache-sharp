@@ -1,5 +1,5 @@
 ﻿using System;
-using MustacheSharp.Properties;
+using Mustache.Properties;
 
 namespace Mustache
 {

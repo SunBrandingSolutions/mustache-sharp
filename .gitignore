@@ -109,3 +109,5 @@ UpgradeLog*.XML
 
 *.lock.json
 .vs/
+BDN.Auto/
+BenchmarkDotNet.Artifacts/
