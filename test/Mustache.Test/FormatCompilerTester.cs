@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading;
 using Xunit;
 
@@ -1562,6 +1563,54 @@ Odd
             string actual = generator.Render(null);
             string expected = "";
             Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
+
+        #region Custom Tags
+
+        [Fact]
+        public void TestCompile_NestedContext_ConsolidatesWriter()
+        {
+            FormatCompiler compiler = new FormatCompiler();
+            compiler.RegisterTag(new UrlEncodeTagDefinition(), true);
+
+            const string format = @"{{#urlencode}}{{url}}{{/urlencode}}";
+            Generator generator = compiler.Compile(format);
+
+            string actual = generator.Render(new { url = "https://google.com" });
+            string expected = UrlEncoder.Default.Encode("https://google.com");
+            Assert.Equal(expected, actual);
+        }
+
+        public class UrlEncodeTagDefinition : ContentTagDefinition
+        {
+            public UrlEncodeTagDefinition()
+                : base("urlencode")
+            {
+            }
+
+            public override IEnumerable<NestedContext> GetChildContext(TextWriter writer, Scope keyScope, Dictionary<string, object> arguments, Scope contextScope)
+            {
+                NestedContext context = new NestedContext()
+                {
+                    KeyScope = keyScope,
+                    Writer = new StringWriter(),
+                    WriterNeedsConsidated = true,
+                };
+                yield return context;
+            }
+
+            public override IEnumerable<TagParameter> GetChildContextParameters()
+            {
+                return new TagParameter[] { new TagParameter("collection") };
+            }
+
+            public override string ConsolidateWriter(TextWriter writer, Dictionary<string, object> arguments)
+            {
+                return UrlEncoder.Default.Encode(writer.ToString());
+            }
         }
 
         #endregion
