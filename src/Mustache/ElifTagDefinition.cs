@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Mustache
 {
@@ -8,11 +7,14 @@ namespace Mustache
     /// </summary>
     internal sealed class ElifTagDefinition : ConditionTagDefinition
     {
+        private const string ElifTag = "elif";
+        private static readonly string[] InnerClosingTags = { "if" };
+
         /// <summary>
         /// Initializes a new instance of an ElifTagDefinition.
         /// </summary>
         public ElifTagDefinition()
-            : base("elif")
+            : base(ElifTag)
         {
         }
 
@@ -23,13 +25,10 @@ namespace Mustache
         {
             return true;
         }
-        
+
         /// <summary>
         /// Gets the tags that indicate the end of the current tags context.
         /// </summary>
-        protected override IEnumerable<string> GetClosingTags()
-        {
-            return new string[] { "if" };
-        }
+        protected override IEnumerable<string> GetClosingTags() => InnerClosingTags;
     }
 }

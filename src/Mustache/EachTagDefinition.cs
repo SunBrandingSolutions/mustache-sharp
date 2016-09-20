@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -11,14 +10,16 @@ namespace Mustache
     /// </summary>
     internal sealed class EachTagDefinition : ContentTagDefinition
     {
-        private const string collectionParameter = "collection";
-        private static readonly TagParameter collection = new TagParameter(collectionParameter) { IsRequired = true };
+        private const string EachTag = "each";
+        private const string CollectionParameter = "collection";
+        private static readonly TagParameter[] InnerParameters = { new TagParameter(CollectionParameter) { IsRequired = true } };
+        private static readonly string[] InnerTags = { "index" };
 
         /// <summary>
         /// Initializes a new instance of an EachTagDefinition.
         /// </summary>
         public EachTagDefinition()
-            : base("each", true)
+            : base(EachTag, true)
         {
         }
 
@@ -34,10 +35,7 @@ namespace Mustache
         /// Gets the parameters that can be passed to the tag.
         /// </summary>
         /// <returns>The parameters.</returns>
-        protected override IEnumerable<TagParameter> GetParameters()
-        {
-            return new TagParameter[] { collection };
-        }
+        protected override IEnumerable<TagParameter> GetParameters() => InnerParameters;
 
         /// <summary>
         /// Gets the context to use when building the inner text of the tag.
@@ -53,12 +51,14 @@ namespace Mustache
             Dictionary<string, object> arguments,
             Scope contextScope)
         {
-            object value = arguments[collectionParameter];
+            object value = arguments[CollectionParameter];
             IEnumerable enumerable = value as IEnumerable;
+
             if (enumerable == null)
             {
                 yield break;
             }
+
             int index = 0;
             foreach (object item in enumerable)
             {
@@ -78,18 +78,12 @@ namespace Mustache
         /// Gets the tags that are in scope under this tag.
         /// </summary>
         /// <returns>The name of the tags that are in scope.</returns>
-        protected override IEnumerable<string> GetChildTags()
-        {
-            return new string[] { "index" };
-        }
+        protected override IEnumerable<string> GetChildTags() => InnerTags;
 
         /// <summary>
         /// Gets the parameters that are used to create a new child context.
         /// </summary>
         /// <returns>The parameters that are used to create a new child context.</returns>
-        public override IEnumerable<TagParameter> GetChildContextParameters()
-        {
-            return new TagParameter[] { collection };
-        }
+        public override IEnumerable<TagParameter> GetChildContextParameters() => InnerParameters;
     }
 }

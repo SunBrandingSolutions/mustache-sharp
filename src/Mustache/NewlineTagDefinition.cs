@@ -9,11 +9,13 @@ namespace Mustache
     /// </summary>
     internal sealed class NewlineTagDefinition : InlineTagDefinition
     {
+        private const string NewlineTag = "newline";
+
         /// <summary>
         /// Initializes a new instance of an NewlineTagDefinition.
         /// </summary>
         public NewlineTagDefinition()
-            : base("newline")
+            : base(NewlineTag)
         {
         }
 

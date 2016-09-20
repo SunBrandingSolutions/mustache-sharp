@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mustache
+﻿namespace Mustache
 {
     /// <summary>
     /// Defines a tag that renders its content depending on the truthyness
@@ -8,11 +6,13 @@ namespace Mustache
     /// </summary>
     internal sealed class IfTagDefinition : ConditionTagDefinition
     {
+        private const string IfTag = "if";
+
         /// <summary>
         /// Initializes a new instance of a IfTagDefinition.
         /// </summary>
         public IfTagDefinition()
-            : base("if")
+            : base(IfTag)
         {
         }
 

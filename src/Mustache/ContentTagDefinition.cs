@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mustache
+﻿namespace Mustache
 {
     /// <summary>
     /// Defines a tag that can contain inner text.

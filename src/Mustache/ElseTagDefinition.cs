@@ -8,11 +8,14 @@ namespace Mustache
     /// </summary>
     internal sealed class ElseTagDefinition : ContentTagDefinition
     {
+        private const string ElseTag = "else";
+        private static readonly string[] InnerClosingTags = { "if" };
+
         /// <summary>
         /// Initializes a new instance of a ElseTagDefinition.
         /// </summary>
         public ElseTagDefinition()
-            : base("else", true)
+            : base(ElseTag, true)
         {
         }
 
@@ -27,18 +30,12 @@ namespace Mustache
         /// <summary>
         /// Gets the tags that indicate the end of the current tag's content.
         /// </summary>
-        protected override IEnumerable<string> GetClosingTags()
-        {
-            return new string[] { "if" };
-        }
+        protected override IEnumerable<string> GetClosingTags() => InnerClosingTags;
 
         /// <summary>
         /// Gets the parameters that are used to create a new child context.
         /// </summary>
         /// <returns>The parameters that are used to create a new child context.</returns>
-        public override IEnumerable<TagParameter> GetChildContextParameters()
-        {
-            return new TagParameter[0];
-        }
+        public override IEnumerable<TagParameter> GetChildContextParameters() => Constants.EmptyTagParameters;
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace Mustache
@@ -9,14 +8,15 @@ namespace Mustache
     /// </summary>
     internal sealed class WithTagDefinition : ContentTagDefinition
     {
-        private const string contextParameter = "context";
-        private static readonly TagParameter context = new TagParameter(contextParameter) { IsRequired = true };
+        private const string WithTag = "with";
+        private const string ContextParameter = "context";
+        private static readonly TagParameter[] InnerContextTags = { new TagParameter(ContextParameter) { IsRequired = true } };
 
         /// <summary>
         /// Initializes a new instance of a WithTagDefinition.
         /// </summary>
         public WithTagDefinition()
-            : base("with", true)
+            : base(WithTag, true)
         {
         }
 
@@ -32,19 +32,13 @@ namespace Mustache
         /// Gets the parameters that can be passed to the tag.
         /// </summary>
         /// <returns>The parameters.</returns>
-        protected override IEnumerable<TagParameter> GetParameters()
-        {
-            return new TagParameter[] { context };
-        }
+        protected override IEnumerable<TagParameter> GetParameters() => InnerContextTags;
 
         /// <summary>
         /// Gets the parameters that are used to create a new child context.
         /// </summary>
         /// <returns>The parameters that are used to create a new child context.</returns>
-        public override IEnumerable<TagParameter> GetChildContextParameters()
-        {
-            return new TagParameter[] { context };
-        }
+        public override IEnumerable<TagParameter> GetChildContextParameters() => InnerContextTags;
 
         /// <summary>
         /// Gets the context to use when building the inner text of the tag.
@@ -60,7 +54,7 @@ namespace Mustache
             Dictionary<string, object> arguments,
             Scope contextScope)
         {
-            object contextSource = arguments[contextParameter];
+            object contextSource = arguments[ContextParameter];
             NestedContext context = new NestedContext() 
             { 
                 KeyScope = keyScope.CreateChildScope(contextSource), 

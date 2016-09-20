@@ -12,7 +12,7 @@ namespace Mustache
         /// Initializes a new instance of a MasterTagDefinition.
         /// </summary>
         public MasterTagDefinition()
-            : base(String.Empty, true)
+            : base(string.Empty, true)
         {
         }
 
@@ -28,18 +28,12 @@ namespace Mustache
         /// Gets the name of the tags that indicate that the tag's context is closed.
         /// </summary>
         /// <returns>The tag names.</returns>
-        protected override IEnumerable<string> GetClosingTags()
-        {
-            return new string[] { };
-        }
+        protected override IEnumerable<string> GetClosingTags() => Constants.EmptyTags;
 
         /// <summary>
         /// Gets the parameters that are used to create a new child context.
         /// </summary>
         /// <returns>The parameters that are used to create a new child context.</returns>
-        public override IEnumerable<TagParameter> GetChildContextParameters()
-        {
-            return new TagParameter[0];
-        }
+        public override IEnumerable<TagParameter> GetChildContextParameters() => Constants.EmptyTagParameters;
     }
 }

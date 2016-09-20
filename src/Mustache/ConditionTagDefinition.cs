@@ -10,7 +10,10 @@ namespace Mustache
     /// </summary>
     internal abstract class ConditionTagDefinition : ContentTagDefinition
     {
-        private const string conditionParameter = "condition";
+        private const string ConditionParameter = "condition";
+        private static readonly TagParameter[] InnerParameters = { new TagParameter(ConditionParameter) { IsRequired = true } };
+        private static readonly TagParameter[] InnerChildContextParameters = { };
+        private static readonly string[] InnerChildTags = { "elif", "else" };
 
         /// <summary>
         /// Initializes a new instance of a ConditionTagDefinition.
@@ -25,19 +28,13 @@ namespace Mustache
         /// Gets the parameters that can be passed to the tag.
         /// </summary>
         /// <returns>The parameters.</returns>
-        protected override IEnumerable<TagParameter> GetParameters()
-        {
-            return new TagParameter[] { new TagParameter(conditionParameter) { IsRequired = true } };
-        }
+        protected override IEnumerable<TagParameter> GetParameters() => InnerParameters;
 
         /// <summary>
         /// Gets the tags that come into scope within the context of the current tag.
         /// </summary>
         /// <returns>The child tag definitions.</returns>
-        protected override IEnumerable<string> GetChildTags()
-        {
-            return new string[] { "elif", "else" };
-        }
+        protected override IEnumerable<string> GetChildTags() => InnerChildTags;
 
         /// <summary>
         /// Gets whether the given tag's generator should be used for a secondary (or substitute) text block.
@@ -46,7 +43,7 @@ namespace Mustache
         /// <returns>True if the tag's generator should be used as a secondary generator.</returns>
         public override bool ShouldCreateSecondaryGroup(TagDefinition definition)
         {
-            return new string[] { "elif", "else" }.Contains(definition.Name);
+            return InnerChildTags.Contains(definition.Name);
         }
 
         /// <summary>
@@ -59,7 +56,7 @@ namespace Mustache
         /// </returns>
         public override bool ShouldGeneratePrimaryGroup(Dictionary<string, object> arguments)
         {
-            object condition = arguments[conditionParameter];
+            object condition = arguments[ConditionParameter];
             return isConditionSatisfied(condition);
         }
 
@@ -75,10 +72,12 @@ namespace Mustache
             {
                 return enumerable.Cast<object>().Any();
             }
-            if (condition is Char)
+
+            if (condition is char)
             {
-                return (Char)condition != '\0';
+                return (char)condition != '\0';
             }
+
             try
             {
                 decimal number = (decimal)Convert.ChangeType(condition, typeof(decimal));
@@ -94,9 +93,6 @@ namespace Mustache
         /// Gets the parameters that are used to create a new child context.
         /// </summary>
         /// <returns>The parameters that are used to create a new child context.</returns>
-        public override IEnumerable<TagParameter> GetChildContextParameters()
-        {
-            return new TagParameter[0];
-        }
+        public override IEnumerable<TagParameter> GetChildContextParameters() => InnerChildContextParameters;
     }
 }
