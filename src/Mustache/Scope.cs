@@ -77,7 +77,6 @@ namespace Mustache
         /// <param name="name">The name of the key.</param>
         /// <param name="isExtension">Specifies whether the key appeared within triple curly braces.</param>
         /// <returns>The value associated with the key with the given name.</returns>
-        /// <exception cref="System.Collections.Generic.KeyNotFoundException">A key with the given name could not be found.</exception>
         internal object Find(string name, bool isExtension)
         {
             SearchResults results = tryFind(name);
@@ -85,13 +84,15 @@ namespace Mustache
             {
                 return onKeyFound(name, results.Value, isExtension);
             }
+
             object value;
             if (onKeyNotFound(name, results.Member, isExtension, out value))
             {
                 return value;
             }
-            string message = String.Format(CultureInfo.CurrentCulture, Resources.KeyNotFound, results.Member);
-            throw new KeyNotFoundException(message);
+
+            // if the key was not found, return the original tag
+            return "{{" + name + "}}";
         }
 
         private object onKeyFound(string name, object value, bool isExtension)
@@ -100,6 +101,7 @@ namespace Mustache
             {
                 return value;
             }
+
             KeyFoundEventArgs args = new KeyFoundEventArgs(name, value, isExtension);
             KeyFound(this, args);
             return args.Substitute;

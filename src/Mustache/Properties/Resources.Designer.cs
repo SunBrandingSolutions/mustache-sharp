@@ -96,15 +96,6 @@ namespace Mustache.Properties {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to The key {0} could not be found..
-        /// </summary>
-        public static string KeyNotFound {
-            get {
-                return ResourceManager.GetString("KeyNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///    Looks up a localized string similar to Expected a matching {0} tag but none was found..
         /// </summary>
         public static string MissingClosingTag {

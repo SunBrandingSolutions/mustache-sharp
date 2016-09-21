@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
-using System.Threading;
 using Xunit;
 
 namespace Mustache.Test
@@ -108,15 +107,15 @@ namespace Mustache.Test
         /// If we try to print a key that doesn't exist, an exception should be thrown.
         /// </summary>
         [Fact]
-        public void TestCompile_MissingKey_Throws()
+        public void TestCompile_MissingKey_ReturnsOriginal()
         {
-            Assert.Throws<KeyNotFoundException>(() =>
-            {
-                FormatCompiler compiler = new FormatCompiler();
-                const string format = @"Hello, {{Name}}!!!";
-                Generator generator = compiler.Compile(format);
-                generator.Render(new object());
-            });
+            FormatCompiler compiler = new FormatCompiler();
+            const string format = @"Hello, {{Name}}!!!";
+            Generator generator = compiler.Compile(format);
+            var actual = generator.Render(new object());
+            var expected = format;
+
+            Assert.Equal(expected, actual);
         }
 
         /// <summary>
@@ -1566,7 +1565,6 @@ Odd
         }
 
         #endregion
-
 
         #region Custom Tags
 

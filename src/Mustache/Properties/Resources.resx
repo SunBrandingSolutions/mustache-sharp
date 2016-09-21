@@ -129,9 +129,6 @@
   <data name="DuplicateTagDefinition" xml:space="preserve">
     <value>The {0} tag has already been registered.</value>
   </data>
-  <data name="KeyNotFound" xml:space="preserve">
-    <value>The key {0} could not be found.</value>
-  </data>
   <data name="MissingClosingTag" xml:space="preserve">
     <value>Expected a matching {0} tag but none was found.</value>
   </data>
