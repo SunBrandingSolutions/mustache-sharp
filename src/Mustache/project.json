@@ -1,5 +1,5 @@
 ﻿{
-  "title": "Mustache Sharp Core",
+  "title": "Mustache Sharp",
   "description": "A extension of the mustache text template engine for .NET.",
   "authors": ["truncon", "kwilliamssbs"],
   "packOptions": {
