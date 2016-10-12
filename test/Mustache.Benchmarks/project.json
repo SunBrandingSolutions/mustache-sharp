@@ -10,7 +10,7 @@
       "type": "platform",
       "version": "1.0.1"
     },
-    "MustacheSharp": "1.0.0-*"
+    "MustacheSharp": "1.0.1-*"
   },
 
   "frameworks": {
