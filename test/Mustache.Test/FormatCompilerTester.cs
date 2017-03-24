@@ -1618,8 +1618,8 @@ Odd
         /// <summary>
         /// Stores a basic definition of a partial to be used in unit tests.
         /// </summary>
-        private readonly PartialDefinition TestPartial =
-            new PartialDefinition("myPartial", "{{Name}}");
+        private readonly KeyValuePair<string, string> TestPartial =
+            new KeyValuePair<string, string>("myPartial", "{{Name}}");
 
         /// <summary>
         /// The normal behavior [when rendering] a partial that is not found
@@ -1629,9 +1629,9 @@ Odd
         public void TestCompile_NoPartial_ShouldThrow()
         {
             FormatCompiler compiler = new FormatCompiler();
-            const string format = $"{{> {TestPartial.Name} }}";
+            string format = $"{{> {TestPartial.Key} }}";
 
-            Assert.Throws<PartialNotFoundException>(() =>
+            Assert.Throws<KeyNotFoundException>(() =>
             {
                 Generator generator = compiler.Compile(format);
 
@@ -1649,7 +1649,7 @@ Odd
         {
             FormatCompiler compiler = new FormatCompiler();
             compiler.RegisterPartial(TestPartial);
-            const string format = $"{{> {TestPartial.Name} }}";
+            string format = $"{{> {TestPartial.Key} }}";
             Generator generator = compiler.Compile(format);
             const string name = "I am myself";
             string result = generator.Render(new { Name = name });
@@ -1668,7 +1668,7 @@ Odd
         {
             FormatCompiler compiler = new FormatCompiler();
             compiler.RegisterPartial(TestPartial);
-            const string format = $"{{> {TestPartial.Name} Person }}";
+            string format = $"{{> {TestPartial.Key} Person }}";
             Generator generator = compiler.Compile(format);
             const string name = "I am myself";
             string result = generator.Render(new { Person = new { Name = name } });
@@ -1684,7 +1684,7 @@ Odd
         {
             FormatCompiler compiler = new FormatCompiler();
             compiler.RegisterPartial(TestPartial);
-            const string format = $"{{> {TestPartial.Name} Name=Person.Name }}";
+            string format = $"{{> {TestPartial.Key} Name=Person.Name }}";
             Generator generator = compiler.Compile(format);
             const string name = "I am myself";
             string result = generator.Render(new { Person = new { Name = name } });
@@ -1703,7 +1703,7 @@ Odd
             // Template passing (using "@partial-block") is not supported
             FormatCompiler compiler = new FormatCompiler();
             const string failover = "Failover content";
-            const string format = $@"{{> {TestPartial.Name} }}{failover}{{/{TestPartial.Name}}}";
+            string format = $@"{{> {TestPartial.Key} }}{failover}{{/{TestPartial.Key}}}";
             Generator generator = compiler.Compile(format);
             string result = generator.Render(null);
             Assert.Equal(failover, result);
@@ -1718,10 +1718,10 @@ Odd
         public void TestCompile_InlinePartials()
         {
             FormatCompiler compiler = new FormatCompiler();
-            const string format = string.Format(@"{{#*inline ""{0}""}}{1}{{#newline}}{{/inline}}
+            string format = string.Format(@"{{#*inline ""{0}""}}{1}{{#newline}}{{/inline}}
 {#each Names}}
   {{> {0}}}
-{{/each}}", TestPartial.Name, TestPartial.Definition);
+{{/each}}", TestPartial.Key, TestPartial.Value);
             Generator generator = compiler.Compile(format);
             string[] names = new string[]
             {
