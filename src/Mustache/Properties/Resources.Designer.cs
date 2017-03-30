@@ -105,6 +105,15 @@ namespace Mustache.Properties {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to A partial template named {0} could not be found..
+        /// </summary>
+        public static string PartialNotDefined {
+            get {
+                return ResourceManager.GetString("PartialNotDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Encountered an unknown tag: {0}. It was either not registered or exists in a different context..
         /// </summary>
         public static string UnknownTag {

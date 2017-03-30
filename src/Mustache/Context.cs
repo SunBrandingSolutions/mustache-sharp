@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="tagName">The name of the tag that created the context.</param>
         /// <param name="parameters">The context parameters.</param>
-        internal Context(string tagName, ContextParameter[] parameters)
+        internal Context(string tagName, params ContextParameter[] parameters)
         {
             TagName = tagName;
             Parameters = parameters;

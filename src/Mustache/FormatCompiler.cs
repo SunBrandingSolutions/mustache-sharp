@@ -14,6 +14,7 @@ namespace Mustache
     {
         private readonly Dictionary<string, TagDefinition> _tagLookup;
         private readonly Dictionary<string, Regex> _regexLookup;
+        private readonly Dictionary<string, string> _partialLookup;
         private readonly MasterTagDefinition _masterDefinition;
 
         /// <summary>
@@ -23,6 +24,7 @@ namespace Mustache
         {
             _tagLookup = new Dictionary<string, TagDefinition>();
             _regexLookup = new Dictionary<string, Regex>();
+            _partialLookup = new Dictionary<string, string>();
             _masterDefinition = new MasterTagDefinition();
 
             IfTagDefinition ifDefinition = new IfTagDefinition();
@@ -84,6 +86,11 @@ namespace Mustache
             _tagLookup.Add(definition.Name, definition);
         }
 
+        public void RegisterPartial(string name, string template)
+        {
+            _partialLookup.Add(name, template);
+        }
+
         /// <summary>
         /// Builds a text generator based on the given format.
         /// </summary>
@@ -96,10 +103,12 @@ namespace Mustache
                 throw new ArgumentNullException("format");
             }
             CompoundGenerator generator = new CompoundGenerator(_masterDefinition, new ArgumentCollection());
+            Dictionary<string, string> partials = new Dictionary<string, string>(_partialLookup);
             List<Context> context = new List<Context>() { new Context(_masterDefinition.Name, new ContextParameter[0]) };
-            int formatIndex = buildCompoundGenerator(_masterDefinition, context, generator, format, 0);
+            int formatIndex = buildCompoundGenerator(_masterDefinition, partials, context, generator, format, 0);
             string trailing = format.Substring(formatIndex);
-            generator.AddGenerator(new StaticGenerator(trailing, RemoveNewLines));
+            if (!trailing.Equals(string.Empty))
+                generator.AddGenerator(new StaticGenerator(trailing, RemoveNewLines));
             return new Generator(generator);
         }
 
@@ -117,6 +126,7 @@ namespace Mustache
                 List<string> matches = new List<string>();
                 matches.Add(getKeyRegex());
                 matches.Add(getCommentTagRegex());
+                matches.Add(getPartialRegex());
                 foreach (string closingTag in definition.ClosingTags)
                 {
                     matches.Add(getClosingTagRegex(closingTag));
@@ -166,6 +176,18 @@ namespace Mustache
             return @"((?<key>" + RegexHelper.CompoundKey + @")(,(?<alignment>(\+|-)?[\d]+))?(:(?<format>.*?))?)";
         }
 
+        private static string getPartialRegex()
+        {
+            StringBuilder regexBuilder = new StringBuilder();
+            regexBuilder.Append(@"(?<call>");
+            regexBuilder.Append(@">\s+?(?<name>(?<argument>");
+            regexBuilder.Append(RegexHelper.Key);
+            regexBuilder.Append(@"))\s+?(?<context>(?<argument>");
+            regexBuilder.Append(RegexHelper.CompoundKey);
+            regexBuilder.Append(@"))?\s*?)");
+            return regexBuilder.ToString();
+        }
+
         private static string getTagRegex(TagDefinition definition)
         {
             StringBuilder regexBuilder = new StringBuilder();
@@ -194,6 +216,7 @@ namespace Mustache
 
         private int buildCompoundGenerator(
             TagDefinition tagDefinition,
+            Dictionary<string, string> partials,
             List<Context> context,
             CompoundGenerator generator,
             string format, int formatIndex)
@@ -216,7 +239,8 @@ namespace Mustache
 
                 if (match.Groups["key"].Success)
                 {
-                    generator.AddGenerator(new StaticGenerator(leading, RemoveNewLines));
+                    if (!leading.Equals(string.Empty))
+                        generator.AddGenerator(new StaticGenerator(leading, RemoveNewLines));
                     formatIndex = match.Index + match.Length;
                     bool isExtension = match.Groups["extension"].Success;
                     string key = match.Groups["key"].Value;
@@ -249,6 +273,56 @@ namespace Mustache
                     KeyGenerator keyGenerator = new KeyGenerator(key, alignment, formatting, isExtension);
                     generator.AddGenerator(keyGenerator);
                 }
+                // if we come across a call for a partial template
+                else if (match.Groups["call"].Success)
+                {
+                    formatIndex = match.Index + match.Length;
+
+                    // include the substring since the last match
+                    if (!leading.Equals(string.Empty))
+                        generator.AddGenerator(new StaticGenerator(leading, RemoveNewLines));
+
+                    var partialTag = new PartialCallTagDefinition(hasContent: false);
+
+                    // retrieve the arguments from the regex
+                    ArgumentCollection arguments = getArguments(partialTag, match, context);
+
+                    string name = match.Groups["name"].Value;
+
+                    string partialTemplate;
+                    if (partials.TryGetValue(name, out partialTemplate))
+                    {
+                        bool hasContext = match.Groups["context"].Success;
+                        if (hasContext)
+                        {
+                            // if a special context is to be provided, do it
+                            var contextString = match.Groups["context"].Value;
+                            var param = new ContextParameter("context", contextString);
+                            context.Add(new Context(partialTag.Name, param));
+                        }
+
+                        // include a fully compiled copy of the template
+                        CompoundGenerator partialGenerator = new CompoundGenerator(partialTag, arguments);
+                        int trailingIndex = buildCompoundGenerator(partialTag, partials, context, partialGenerator, partialTemplate, 0);
+                        generator.AddGenerator(partialGenerator);
+
+                        // and the part of the template after the last match
+                        string trailing = partialTemplate.Substring(trailingIndex);
+                        if (!trailing.Equals(string.Empty))
+                            generator.AddGenerator(new StaticGenerator(trailing, RemoveNewLines));
+
+                        if (hasContext)
+                        {
+                            // undo the context change
+                            context.RemoveAt(context.Count - 1);
+                        }
+                    }
+                    else
+                    {
+                        string message = String.Format(Resources.PartialNotDefined, name);
+                        throw new FormatException(message);
+                    }
+                }
                 else if (match.Groups["open"].Success)
                 {
                     formatIndex = match.Index + match.Length;
@@ -260,7 +334,8 @@ namespace Mustache
                         throw new FormatException(message);
                     }
 
-                    generator.AddGenerator(new StaticGenerator(leading, RemoveNewLines));
+                    if (!leading.Equals(string.Empty))
+                        generator.AddGenerator(new StaticGenerator(leading, RemoveNewLines));
                     ArgumentCollection arguments = getArguments(nextDefinition, match, context);
 
                     if (nextDefinition.HasContent)
@@ -273,7 +348,7 @@ namespace Mustache
                             ContextParameter[] parameters = contextParameters.Select(p => new ContextParameter(p.Name, arguments.GetKey(p))).ToArray();
                             context.Add(new Context(nextDefinition.Name, parameters));
                         }
-                        formatIndex = buildCompoundGenerator(nextDefinition, context, compoundGenerator, format, formatIndex);
+                        formatIndex = buildCompoundGenerator(nextDefinition, partials, context, compoundGenerator, format, formatIndex);
                         generator.AddGenerator(nextDefinition, compoundGenerator);
                         if (hasContext)
                         {
@@ -288,7 +363,8 @@ namespace Mustache
                 }
                 else if (match.Groups["close"].Success)
                 {
-                    generator.AddGenerator(new StaticGenerator(leading, RemoveNewLines));
+                    if (!leading.Equals(string.Empty))
+                        generator.AddGenerator(new StaticGenerator(leading, RemoveNewLines));
                     string tagName = match.Groups["name"].Value;
                     TagDefinition nextDefinition = _tagLookup[tagName];
                     formatIndex = match.Index;
@@ -300,7 +376,8 @@ namespace Mustache
                 }
                 else if (match.Groups["comment"].Success)
                 {
-                    generator.AddGenerator(new StaticGenerator(leading, RemoveNewLines));
+                    if (!leading.Equals(string.Empty))
+                        generator.AddGenerator(new StaticGenerator(leading, RemoveNewLines));
                     formatIndex = match.Index + match.Length;
                 }
                 else if (match.Groups["unknown"].Success)

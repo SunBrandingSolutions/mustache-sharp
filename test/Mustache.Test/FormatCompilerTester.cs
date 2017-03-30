@@ -1629,9 +1629,9 @@ Odd
         public void TestCompile_NoPartial_ShouldThrow()
         {
             FormatCompiler compiler = new FormatCompiler();
-            string format = $"{{> {TestPartial.Key} }}";
+            string format = "{{> " + TestPartial.Key + " }}";
 
-            Assert.Throws<KeyNotFoundException>(() =>
+            Assert.Throws<FormatException>(() =>
             {
                 Generator generator = compiler.Compile(format);
 
@@ -1648,43 +1648,29 @@ Odd
         public void TestCompile_BasicPartials()
         {
             FormatCompiler compiler = new FormatCompiler();
-            compiler.RegisterPartial(TestPartial);
-            string format = $"{{> {TestPartial.Key} }}";
+            compiler.RegisterPartial(TestPartial.Key, TestPartial.Value);
+            string format = "Maybe {{> " + TestPartial.Key + " }} after all";
             Generator generator = compiler.Compile(format);
             const string name = "I am myself";
             string result = generator.Render(new { Name = name });
-            Assert.Equal(name, result);
+            Assert.Equal(name, $"Maybe ${result} after all");
         }
 
 
         /// <summary>
         /// Dynamic partials are not supported
         /// http://handlebarsjs.com/partials.html#dynamic-partials
-        /// You can pass custom contexts to the partial template calls.
+        /// Partial parameters aren't either
+        /// http://handlebarsjs.com/partials.html#partial-parameters
+        /// But you can pass custom contexts to the partial template calls.
         /// http://handlebarsjs.com/partials.html#partial-context
         /// </summary>
         [Fact]
         public void TestCompile_PartialContexts()
         {
             FormatCompiler compiler = new FormatCompiler();
-            compiler.RegisterPartial(TestPartial);
-            string format = $"{{> {TestPartial.Key} Person }}";
-            Generator generator = compiler.Compile(format);
-            const string name = "I am myself";
-            string result = generator.Render(new { Person = new { Name = name } });
-            Assert.Equal(name, result);
-        }
-
-        /// <summary>
-        /// http://handlebarsjs.com/partials.html#partial-parameters
-        /// You can pass custom parameters to partials.
-        /// </summary>
-        [Fact]
-        public void TestCompile_PartialParameters()
-        {
-            FormatCompiler compiler = new FormatCompiler();
-            compiler.RegisterPartial(TestPartial);
-            string format = $"{{> {TestPartial.Key} Name=Person.Name }}";
+            compiler.RegisterPartial(TestPartial.Key, TestPartial.Value);
+            string format = "{{> " + TestPartial.Key + " Person }}";
             Generator generator = compiler.Compile(format);
             const string name = "I am myself";
             string result = generator.Render(new { Person = new { Name = name } });
@@ -1703,7 +1689,7 @@ Odd
             // Template passing (using "@partial-block") is not supported
             FormatCompiler compiler = new FormatCompiler();
             const string failover = "Failover content";
-            string format = $@"{{> {TestPartial.Key} }}{failover}{{/{TestPartial.Key}}}";
+            string format = "{{> " + TestPartial.Key + " }}" + failover + "{{/" + TestPartial.Key + "}}";
             Generator generator = compiler.Compile(format);
             string result = generator.Render(null);
             Assert.Equal(failover, result);
