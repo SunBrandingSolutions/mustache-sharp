@@ -9,7 +9,7 @@
       "type": "platform",
       "version": "1.0.1"
     },
-    "Mustache": "1.0.1-*",
+    "Mustache": "1.0.2-*",
     "xunit": "2.2.0-beta2-build3300"
   },
 

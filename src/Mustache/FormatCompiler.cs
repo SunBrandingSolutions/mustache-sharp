@@ -291,6 +291,7 @@ namespace Mustache
                 {
                     formatIndex = match.Index + match.Length;
 
+                    // add the template definition to the lookup
                     partials.Add(match.Groups["name"].Value, match.Groups["definition"].Value);
                 }
                 // if we come across a call for a partial template
@@ -302,7 +303,7 @@ namespace Mustache
                     if (!leading.Equals(string.Empty))
                         generator.AddGenerator(new StaticGenerator(leading, RemoveNewLines));
 
-                    var partialTag = new PartialCallTagDefinition(hasContent: false);
+                    var partialTag = new PartialCallTagDefinition();
 
                     // retrieve the arguments from the regex
                     ArgumentCollection arguments = getArguments(partialTag, match, context);
