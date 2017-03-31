@@ -1653,7 +1653,7 @@ Odd
             Generator generator = compiler.Compile(format);
             const string name = "I am myself";
             string result = generator.Render(new { Name = name });
-            Assert.Equal(name, $"Maybe ${result} after all");
+            Assert.Equal($"Maybe {name} after all", result);
         }
 
 
