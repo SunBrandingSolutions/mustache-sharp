@@ -1614,6 +1614,12 @@ Odd
         #endregion
 
         #region Partials
+        /// Dynamic partials are not supported
+        /// http://handlebarsjs.com/partials.html#dynamic-partials
+        /// Partial parameters aren't either
+        /// http://handlebarsjs.com/partials.html#partial-parameters
+        /// No luck with partial blocks and failovers
+        /// http://handlebarsjs.com/partials.html#partial-block
 
         /// <summary>
         /// Stores a basic definition of a partial to be used in unit tests.
@@ -1658,11 +1664,7 @@ Odd
 
 
         /// <summary>
-        /// Dynamic partials are not supported
-        /// http://handlebarsjs.com/partials.html#dynamic-partials
-        /// Partial parameters aren't either
-        /// http://handlebarsjs.com/partials.html#partial-parameters
-        /// But you can pass custom contexts to the partial template calls.
+        /// You can pass custom contexts to the partial template calls.
         /// http://handlebarsjs.com/partials.html#partial-context
         /// </summary>
         [Fact]
@@ -1678,24 +1680,6 @@ Odd
         }
 
         /// <summary>
-        /// http://handlebarsjs.com/partials.html#partial-block
-        /// To not throw errors for partials that may not be defined,
-        /// you can pass in a block of failover content to be displayed
-        /// should the partial not be found.
-        /// </summary>
-        [Fact]
-        public void TestCompile_PartialBlocks_WithFailover()
-        {
-            // Template passing (using "@partial-block") is not supported
-            FormatCompiler compiler = new FormatCompiler();
-            const string failover = "Failover content";
-            string format = "{{> " + TestPartial.Key + " }}" + failover + "{{/" + TestPartial.Key + "}}";
-            Generator generator = compiler.Compile(format);
-            string result = generator.Render(null);
-            Assert.Equal(failover, result);
-        }
-
-        /// <summary>
         /// http://handlebarsjs.com/partials.html#inline-partials
         /// Inline partials will be available to the current block and all children.
         /// However, having them available in the execution of other partials is not supported.
@@ -1704,19 +1688,19 @@ Odd
         public void TestCompile_InlinePartials()
         {
             FormatCompiler compiler = new FormatCompiler();
-            string format = string.Format(@"{{#*inline ""{0}""}}{1}{{#newline}}{{/inline}}
-{#each Names}}
-  {{> {0}}}
-{{/each}}", TestPartial.Key, TestPartial.Value);
+            string format = "{{#*inline \"" + TestPartial.Key + "\"}}" +
+                TestPartial.Value + "{{#newline}}{{/inline}}" +
+                "{{#each Names}}{{> " + TestPartial.Key + "}}{{/each}}";
             Generator generator = compiler.Compile(format);
+
             string[] names = new string[]
             {
                 "I am myself",
                 "You are not different from me",
                 "And you never were."
             };
-            string result = generator.Render(new { Names = names });
-            Assert.Equal(string.Join("\n", names), result);
+            string result = generator.Render(new { Names = names.Select(s => new { Name = s }) });
+            Assert.Equal(string.Join(string.Empty, names.Select(s => s + "\r\n")), result);
         }
 
         #endregion

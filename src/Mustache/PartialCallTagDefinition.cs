@@ -19,19 +19,14 @@ namespace Mustache
             new TagParameter(ContextParameter) { IsRequired = false }
         };
 
-        private bool _hasContent;
-
-        public PartialCallTagDefinition(bool hasContent)
-            : base(PartialCallTag, true)
-        {
-            this._hasContent = hasContent;
-        }
+        public PartialCallTagDefinition()
+            : base(PartialCallTag, true) { }
 
         protected override IEnumerable<TagParameter> GetParameters() => InnerTags;
 
         public override IEnumerable<TagParameter> GetChildContextParameters() => InnerContextTags;
 
-        protected override bool GetHasContent() => _hasContent;
+        protected override bool GetHasContent() => false;
 
         public override IEnumerable<NestedContext> GetChildContext(
             TextWriter writer,
@@ -40,9 +35,16 @@ namespace Mustache
             Scope contextScope)
         {
             object contextSource = arguments[ContextParameter];
+
+            Scope scope;
+            if (contextSource == null)
+                scope = keyScope.CreateChildScope();
+            else
+                scope = keyScope.CreateChildScope(contextSource);
+
             NestedContext context = new NestedContext()
             {
-                KeyScope = keyScope.CreateChildScope(contextSource),
+                KeyScope = scope,
                 Writer = writer,
                 ContextScope = contextScope.CreateChildScope()
             };

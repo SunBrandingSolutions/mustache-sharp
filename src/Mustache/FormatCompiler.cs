@@ -126,7 +126,8 @@ namespace Mustache
                 List<string> matches = new List<string>();
                 matches.Add(getKeyRegex());
                 matches.Add(getCommentTagRegex());
-                matches.Add(getPartialRegex());
+                matches.Add(getPartialDefinitionRegex());
+                matches.Add(getPartialCallRegex());
                 foreach (string closingTag in definition.ClosingTags)
                 {
                     matches.Add(getClosingTagRegex(closingTag));
@@ -176,15 +177,27 @@ namespace Mustache
             return @"((?<key>" + RegexHelper.CompoundKey + @")(,(?<alignment>(\+|-)?[\d]+))?(:(?<format>.*?))?)";
         }
 
-        private static string getPartialRegex()
+        private static string getPartialDefinitionRegex()
+        {
+            StringBuilder regexBuilder = new StringBuilder();
+            regexBuilder.Append(@"(?<define>");
+            regexBuilder.Append(@"#\*inline\s+?");
+            regexBuilder.Append(@"""(?<name>[a-zA-Z0-9]+?)""");
+            regexBuilder.Append(@"}?}}");
+            regexBuilder.Append(@"(?<definition>.*)");
+            regexBuilder.Append(@"{?{{/inline)");
+            return regexBuilder.ToString();
+        }
+
+        private static string getPartialCallRegex()
         {
             StringBuilder regexBuilder = new StringBuilder();
             regexBuilder.Append(@"(?<call>");
             regexBuilder.Append(@">\s+?(?<name>(?<argument>");
             regexBuilder.Append(RegexHelper.Key);
-            regexBuilder.Append(@"))\s+?(?<context>(?<argument>");
+            regexBuilder.Append(@"))(?:\s+?(?<context>(?<argument>");
             regexBuilder.Append(RegexHelper.CompoundKey);
-            regexBuilder.Append(@"))?\s*?)");
+            regexBuilder.Append(@")))?\s*?)");
             return regexBuilder.ToString();
         }
 
@@ -272,6 +285,13 @@ namespace Mustache
                     }
                     KeyGenerator keyGenerator = new KeyGenerator(key, alignment, formatting, isExtension);
                     generator.AddGenerator(keyGenerator);
+                }
+                // if we come across a partial template definition
+                else if (match.Groups["define"].Success)
+                {
+                    formatIndex = match.Index + match.Length;
+
+                    partials.Add(match.Groups["name"].Value, match.Groups["definition"].Value);
                 }
                 // if we come across a call for a partial template
                 else if (match.Groups["call"].Success)
