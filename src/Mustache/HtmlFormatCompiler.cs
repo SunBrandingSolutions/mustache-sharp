@@ -1,5 +1,5 @@
 ﻿using System;
-#if NETSTANDARD1_3
+#if NETSTANDARD1_4
 using System.Text.Encodings.Web;
 #else
 using System.Security;
@@ -66,7 +66,7 @@ namespace Mustache
                 return;
             }
 
-#if NETSTANDARD1_3
+#if NETSTANDARD1_4
             e.Substitute = HtmlEncoder.Default.Encode(e.Substitute);
 #else
             e.Substitute = SecurityElement.Escape(e.Substitute);

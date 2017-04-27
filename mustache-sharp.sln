@@ -1,22 +1,17 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26114.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Mustache", "src\Mustache\Mustache.xproj", "{371E94AB-0454-463D-BC3E-C3D29B28C62B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mustache", "src\Mustache\Mustache.csproj", "{371E94AB-0454-463D-BC3E-C3D29B28C62B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{443510D0-8D9E-4485-8A8F-C4BD9E7D2BC6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FE853451-70EA-478B-BD92-5D215447CE0D}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Mustache.Test", "test\Mustache.Test\Mustache.Test.xproj", "{387D8A93-49F6-4528-96EF-5DA845461BCC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mustache.Test", "test\Mustache.Test\Mustache.Test.csproj", "{387D8A93-49F6-4528-96EF-5DA845461BCC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4B38EFD7-45E6-43DF-BB06-4AB1B88F9856}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Mustache.Benchmarks", "test\Mustache.Benchmarks\Mustache.Benchmarks.xproj", "{BA25C84F-5556-438B-B1A3-AE21A7B65939}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mustache.Benchmarks", "test\Mustache.Benchmarks\Mustache.Benchmarks.csproj", "{BA25C84F-5556-438B-B1A3-AE21A7B65939}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

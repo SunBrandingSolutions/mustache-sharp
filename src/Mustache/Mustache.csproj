@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>A extension of the mustache text template engine for .NET.</Description>
+    <AssemblyTitle>Mustache Sharp</AssemblyTitle>
+    <VersionPrefix>1.1.0</VersionPrefix>
+    <Authors>truncon;kwilliamssbs</Authors>
+    <TargetFrameworks>netstandard1.4;net452</TargetFrameworks>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Mustache</AssemblyName>
+    <PackageId>Mustache</PackageId>
+    <PackageTags>mustache;handlebars.js;text;generation;building;template</PackageTags>
+    <PackageProjectUrl>https://github.com/SunBrandingSolutions/mustache-sharp</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/SunBrandingSolutions/mustache-sharp/master/UNLICENSE.txt</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/SunBrandingSolutions/mustache-sharp</RepositoryUrl>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.4' ">
+    <PackageReference Include="System.Data.Common" Version="4.1.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>
