@@ -1612,5 +1612,97 @@ Odd
         }
 
         #endregion
+
+        #region Partials
+        /// Dynamic partials are not supported
+        /// http://handlebarsjs.com/partials.html#dynamic-partials
+        /// Partial parameters aren't either
+        /// http://handlebarsjs.com/partials.html#partial-parameters
+        /// No luck with partial blocks and failovers
+        /// http://handlebarsjs.com/partials.html#partial-block
+
+        /// <summary>
+        /// Stores a basic definition of a partial to be used in unit tests.
+        /// </summary>
+        private readonly KeyValuePair<string, string> TestPartial =
+            new KeyValuePair<string, string>("myPartial", "{{Name}}");
+
+        /// <summary>
+        /// The normal behavior [when rendering] a partial that is not found
+        /// is for the implementation to throw an error.
+        /// </summary>
+        [Fact]
+        public void TestCompile_NoPartial_ShouldThrow()
+        {
+            FormatCompiler compiler = new FormatCompiler();
+            string format = "{{> " + TestPartial.Key + " }}";
+
+            Assert.Throws<FormatException>(() =>
+            {
+                Generator generator = compiler.Compile(format);
+
+                const string name = "I am myself";
+                string result = generator.Render(new { Name = name });
+            });
+        }
+
+        /// <summary>
+        /// http://handlebarsjs.com/partials.html#basic-partials
+        /// You can define partial templates to facilitate template code reuse.
+        /// </summary>
+        [Fact]
+        public void TestCompile_BasicPartials()
+        {
+            FormatCompiler compiler = new FormatCompiler();
+            compiler.RegisterPartial(TestPartial.Key, TestPartial.Value);
+            string format = "Maybe {{> " + TestPartial.Key + " }} after all";
+            Generator generator = compiler.Compile(format);
+            const string name = "I am myself";
+            string result = generator.Render(new { Name = name });
+            Assert.Equal($"Maybe {name} after all", result);
+        }
+
+
+        /// <summary>
+        /// You can pass custom contexts to the partial template calls.
+        /// http://handlebarsjs.com/partials.html#partial-context
+        /// </summary>
+        [Fact]
+        public void TestCompile_PartialContexts()
+        {
+            FormatCompiler compiler = new FormatCompiler();
+            compiler.RegisterPartial(TestPartial.Key, TestPartial.Value);
+            string format = "{{> " + TestPartial.Key + " Person }}";
+            Generator generator = compiler.Compile(format);
+            const string name = "I am myself";
+            string result = generator.Render(new { Person = new { Name = name } });
+            Assert.Equal(name, result);
+        }
+
+        /// <summary>
+        /// http://handlebarsjs.com/partials.html#inline-partials
+        /// Inline partials will be available to the current block and all children.
+        /// However, having them available in the execution of other partials is not supported.
+        /// </summary>
+        [Fact]
+        public void TestCompile_InlinePartials()
+        {
+            FormatCompiler compiler = new FormatCompiler();
+            string format = "{{#*inline \"" + TestPartial.Key + "\"}}" +
+                TestPartial.Value + "{{#newline}}{{/inline}}" +
+                "{{#each Names}}{{> " + TestPartial.Key + "}}{{/each}}";
+            Generator generator = compiler.Compile(format);
+
+            string[] names = new string[]
+            {
+                "I am myself",
+                "You are not different from me",
+                "And you never were."
+            };
+            string result = generator.Render(new { Names = names.Select(s => new { Name = s }) });
+            Assert.Equal(string.Join(string.Empty, names.Select(s => s + "\r\n")), result);
+        }
+
+        #endregion
     }
 }

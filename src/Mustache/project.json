@@ -13,7 +13,7 @@
     },
     "tags": [ "mustache", "handlebars.js", "text", "generation", "building", "template" ]
   },
-  "version": "1.0.1-*",
+  "version": "1.0.2-*",
 
   "buildOptions": {
     "embed": {
